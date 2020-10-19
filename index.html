@@ -764,8 +764,7 @@ export class PageRouteService implements CanActivate {
 					{ src: 'js/marked.js' },
 					{ src: 'js/markdown.js' },
 					{ src: 'js/notes.js', async: true },
-					{ src: 'js/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-					{ src: 'js/notes.js', async: true }
+					{ src: 'js/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
 				]
 			});
 		</script>
