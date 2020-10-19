@@ -1,0 +1,659 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Reconfiguring Angular's Router with a CMS</title>
+
+		<link rel="stylesheet" href="./node_modules/reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="./node_modules/reveal.js/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="./node_modules/reveal.js/lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<!-- Title Slide -->
+				<section data-markdown id="title">
+					<textarea data-template>
+						# Reconfiguring Angular's Router with a CMS
+
+						## Routing, Angular, and WordPress
+
+						<aside class="notes" data-markdown>
+						- you, dear audience, should not be seeing these speaker notes
+						</aside>
+					</textarea>
+				</section>
+
+				<section data-markdown id="audience">
+					<textarea data-template>
+						## Call me Matthew
+
+						- 10 years as a web developer
+						- 8 years with WordPress
+						- 1 year with Angular
+					</textarea>
+				</section>
+
+
+				<section data-markdown id="audience">
+					<textarea data-template>
+						# Audience
+
+						- Web developers
+							- How do I Angular? <— —> intermediate Ng
+							- maybe you run a CMS
+					</textarea>
+				</section>
+
+				<section data-markdown id="focus">
+					<textarea data-template>
+						# Focus
+
+						This is a conceptual talk, not a code exploration.
+
+						angular.io/guide/router
+
+						<aside class="notes" data-markdown>
+						- simplified code to illustrates concepts
+						- Code = least valuable
+						- can't learn Ng Routing from a talk
+						- My bias: focus on WHY
+							- developer education tends to be long on HOW, short on WHY
+							- good developer can figure out HOW
+						</aside>
+
+					</textarea>
+				</section>
+
+				<section data-markdown id="outline">
+					<textarea data-template>
+						# Outline
+
+						1. What is Routing
+						2. Angular routing overview
+						3. Technique for getting routes from your CMS
+					</textarea>
+				</section>
+
+				<!-- WHAT IS ROUTING -->
+				<section data-markdown id="routing-wat">
+					<textarea data-template>
+						<h2>Routing <span class="fragment fade-in" data-fragment-index="1">Defined</span></h2>
+
+						<span class="fragment fade-out" data-fragment-index="1">WAT</span>
+
+						<span class="fragment fade-in" data-fragment-index="1">Mapping URLs to a view</span>
+
+						<ol class="fragment fade-in" data-fragment-index="2">
+							<li>Interpret a web address</li>
+							<li>Decide what to show when you get there</li>
+						</ol>
+
+					</textarea>
+				</section>
+
+				<!-- ADDRESS PROTOCOLS -->
+				<section data-markdown id="urls-protocol">
+					<textarea data-template>
+						## Address Protocols
+
+						https://subdomain.domain.tld/a-thing/a-child-thing/?some_data=value
+
+						<span class="fragment fade-in" data-fragment-index="1">127.0.0.1</span>
+
+						<span class="fragment fade-in" data-fragment-index="2">503-123-1234</span>
+
+						<aside class="notes" data-markdown>
+						- Overthink URLs: genius thing we take for granted
+						- break down the parts
+						- Flexible, hierarchical to show relationships
+							- drilling down
+							- locating yourself contextually
+							- semantic
+						- contrast phone: area code, otherwise meaningless
+						- contrast IP: semantic
+						</aside>
+					</textarea>
+				</section>
+
+				<!-- URLS ARE GENIUS -->
+				<section data-markdown id="urls-are-ingenius">
+					<textarea data-template>
+						## URLs are ingenius
+					</textarea>
+				</section>
+
+				<section data-markdown id="urls-need-interpretation">
+					<textarea data-template>
+
+						### Let's get routing!
+
+						<span>https://</span><span class="fragment fade-in" data-fragment-index="2">subdomain.example.com/</span><span class="fragment fade-in-then-out" data-fragment-index="3">endpoint</span>
+
+						<span class="fragment fade-in-then-out" data-fragment-index="1">Browser: "I got this"</span>
+
+						<span class="fragment fade-in-then-out" data-fragment-index="2">DNS: "I got this"</span>
+
+						<span class="fragment fade-in-then-out" data-fragment-index="3">Routing: "I got this"</span>
+
+						<span class="fragment fade-in" data-fragment-index="4"><em>In a world</em> without routing...</span>
+
+						<aside class="notes" data-markdown>
+						- actually: single page apps
+						- browser: one URL = one page
+						- deep linking: copy/paste, get same thing
+						- appropriate rarely; generally anathema
+						- accessibility
+						</aside>
+					</textarea>
+				</section>
+
+				<!-- VARYING INVOLVEMENT WITH ROUTING -->
+				<section data-markdown id="different-tools-different-approaches">
+					<textarea data-template>
+						## Your involvement with routing depends on the tool
+
+						<aside class="notes" data-markdown>
+						- taken for granted, or big focus
+						- think about very little, or a lot
+						- generally app devs contend a lot
+						- CMS devs spoiled (handled for you, can be misleading)
+						- If you're like me… didn't know, didn't matter, no idea how big an issue
+						</aside>
+					</textarea>
+				</section>
+				<!-- WORDPRESS SPOILED ME -->
+				<section data-markdown id="">
+					<textarea data-template>
+						## CMS routers spoil you
+
+						-  Think about routing rarely
+						-  Routing is fairly simple and straightforward
+
+						<span class="fragment fade-in" data-fragment-index="1"><a href="#">example.com/some-category/some-specific-topic</a></span>
+
+						<aside class="notes" data-markdown>
+						-  default content "just works" w/ popular CMS systems like WordPress:
+							- sane default configuration for default content
+						- recognize if you've been on the internet: [queue — and explain]
+						- familiar & intuitive
+							- for free w/ hierarchical content
+						-  use routing when adding content types. 5% effort.
+						</aside>
+					</textarea>
+				</section>
+
+				<!-- ANGULAR NEEDS YOUR ATTENTION -->
+				<section data-markdown id="angular-demands-routing">
+					<textarea data-template>
+						## Angular Demands Router Attention
+
+						- think about it all the time
+						- comparatively difficult to work with
+
+						<aside class="notes" data-markdown>
+						- your app is unique & custom; there's no pre-configured routing
+						- power > ease-of-use — surprising no-one
+						- most sophisticated of 9 frameworks
+						</aside>
+					</textarea>
+				</section>
+
+				<section data-markdown id="outline-checkin-1">
+					<textarea data-template>
+						## Check in
+
+						1. **What is Routing** <— we are done here
+						2. _Angular routing overview_ <— next!
+						3. _Technique for getting routes from your CMS_
+
+						<aside class="notes" data-markdown>
+						- QUESTIONS?
+						</aside>
+					</textarea>
+				</section>
+
+				<!-- SLIDE BOILERPLATE -->
+				<section data-markdown id="angular-routeroverview-tease">
+					<textarea data-template>
+						## Angular Router Overview
+
+						<span class="fragment slide-in" data-fragment-index="1">But first! An excursion</span>
+					</textarea>
+				</section>
+
+				<!-- WP EXCURSION -->
+				<section data-markdown id="wp-interlude">
+					<textarea data-template>
+						## WordPress Routing Quicktour
+
+						<aside class="notes" data-markdown>
+						- Why dwell on WP routing?
+						1. Contextualize _my_ approach as a WP developer
+						2. Paint Ng in higher relief through contrast
+						3. Foundation for the WHY of the technique
+						- ty for patience
+						- I'll go spare on WP details
+						</aside>
+					</textarea>
+				</section>
+
+				<!-- WP ROUTING OVERVIEW -->
+				<section data-markdown id="wordpress-routing-overview">
+					<textarea data-template>
+						<ol>
+							<li>"Rewrite API" rules: interpret address<ul>
+								<li>URL endpoint turned into a content resource
+								<li>`/post-slug/`</li></ul></li>
+							<li class="fragment fade-in" data-fragment-index="1">Database: Gets content<ul>
+								<li>**Routing strategy: URL maps to _a DB query_**</li></ul></li>
+							<li class="fragment fade-in" data-fragment-index="2">"Template Hierarchy": Loads view</li>
+							<li class="fragment fade-in" data-fragment-index="3">User Roles & Capabilities: Access controls</li>
+							<li class="fragment fade-in" data-fragment-index="4">Hooks & Filters: customize any of the above</li>
+						</ol>
+
+						<aside class="notes" data-markdown>
+						1. pattern match then build query
+							- content is organizing principle; basis of schema
+							- convert addresses into a resource — a piece of content.
+						2. **Route strategy: URLs map to database queries!**
+							- devs don't need to figure out literal routes ahead of time
+							- Rather, describe strategy for creating them on the fly
+						3. if-then tree; view = PHP script; output: struc HTML w/ DB content plugged in
+							- query result dictates view you'll get
+							- standardized file names; super-specific to generic
+						4. decide who's allowed to see what, when
+						5. event-driven extensibility system
+						6. All work together to [routing definition]
+						</aside>
+					</textarea>
+				</section>
+
+				<!-- Angular Router Overview -->
+				<section data-markdown id="angular-router-overview-intro">
+					<textarea data-template>
+						## Angular Router Overview
+
+					</textarea>
+				</section>
+
+				<!-- Angular Router Overview Intro -->
+				<section data-markdown id="angular-router-overview-1">
+					<textarea data-template>
+						<p>1. Routing happens with... the Router</p>
+						<p>`src/app/app.module.ts`:</p>
+
+						```typescript
+						import { RouterModule, Routes } from '@angular/router';
+
+						@NgModule({
+							imports: [
+								RouterModule.forRoot(
+									appRoutes, // <—— ROUTE CONFIGURATION
+								)
+							],
+						})
+						export class AppModule { }
+						```
+
+						<aside class="notes" data-markdown>
+						1. Its own core library
+						2. Include in your AppModule
+						</aside>
+
+					</textarea>
+				</section>
+
+				<section data-markdown id="angular-router-overview-2">
+					<textarea data-template>
+						<p>2. Router Configuration defines patterns in a sequence</p>
+						<p>Also in `src/app/app.module.ts`:</p>
+
+						```typescript
+						const appRoutes: Routes = [
+							//  matches nomnomapp.com/food
+							{ path: 'food' },
+
+							// matches nomnomapp.com/drink
+							{ path: 'drink' },
+
+							// matches nomnomapp.com/welcome
+							{ path: 'welcome' },
+
+							// matches nomnomapp.com/
+							// REDIRECTS to /welcome
+							{
+								path: '',
+								redirectTo: '/welcome',
+								pathMatch: 'full'
+							},
+
+							// handles everything else
+							// good for loading e.g. a 404 Not Found view
+							{ path: '**' },
+						];
+						```
+
+						<aside class="notes" data-markdown>
+						- 1st match, applies, router then attempts to load that
+						- else, check next pattern
+						- `redirectTo` w/ `pathMatch`; `**` syntax
+						- compiled: discover/configure process during exec
+						- **reconfigured** on the fly: dump & rebuild programmatically
+						</aside>
+
+					</textarea>
+				</section>
+
+				<section data-markdown id="angular-router-overview-3">
+					<textarea data-template>
+
+						<p>3. Routes typically load a Component</p>
+						<ul>
+							<li>**Routing strategy: URL maps to _specific code to run_**</li>
+						</ul>
+
+						<p>Still in `src/app/app.module.ts`:</p>
+
+						```typescript
+						const appRoutes: Routes = [
+							{ path: 'food', component: 'FoodComponent' },
+							{ path: 'drink', component: 'DrinkComponent' },
+							{ path: 'welcome', component: 'WelcomeComponent' },
+							{
+								path: '',
+								redirectTo: '/welcome',
+								pathMatch: 'full'
+							},
+							{ path: '**', component: 'OhNoComponent' },
+						];
+						```
+
+						<aside class="notes" data-markdown>
+							- last slide's config was missing something
+							- this config code will compile
+							- components are bundles of encapsulated state with view code (called templates)
+							- IOW: loading these components determines what you'll see
+						</aside>
+
+					</textarea>
+				</section>
+
+				<section data-markdown id="angular-router-overview-4">
+					<textarea data-template>
+
+						<p>4. Components load in a **Router Outlet**</p>
+						<p>`src/app/app.module.html` template:</p>
+
+							```typescript
+							<router-outlet></router-outlet>
+							```
+
+							<aside class="notes" data-markdown>
+							- special Angular template directive
+							- yes it looks like an HTML element
+							</aside>
+
+						</textarea>
+					</section>
+
+					<section data-markdown id="angular-router-overview-5">
+						<textarea data-template>
+
+						<p>5. Child routes map child-components</p>
+
+						<p>Back in `src/app/app.module.ts`:</p>
+
+						```typescript
+						const appRoutes: Routes = [
+							{
+								path: 'food',
+								component: 'FoodComponent',
+								children: [
+									{
+										path: 'intro',
+										component: 'FoodIntroComponent',
+									},
+									{
+										path: ':id',
+										component: 'FoodDetailComponent',
+									},
+								],
+							},
+						];
+						```
+
+						<ul>
+							<li>https://nomnomapp.com/food/intro</li>
+							<li>https://nomnomapp.com/food/rutabaga</li>
+						</ul>
+
+						<aside class="notes" data-markdown>
+						- Supporting two routes here
+						- can be nested
+						</aside>
+
+					</textarea>
+				</section>
+
+				<section data-markdown id="angular-router-overview-6">
+					<textarea data-template>
+
+						<p>6. Route parameters pass information to views</p>
+
+						- Inject `ActivatedRoute` into components to access this during component setup.
+						- `:id` will capture "rutabaga" and add it to `ActivatedRoute.paramMap`.
+
+							```typescript
+							children: [
+								{
+									path: ':id',
+									component: 'FoodDetailComponent',
+								},
+							],
+							```
+
+							<aside class="notes" data-markdown>
+							- pass info's unique to a route
+							- customize state & view of a Component shared by multiple routes
+							- one component, many vegetables
+							</aside>
+
+						</textarea>
+					</section>
+
+					<section data-markdown id="angular-router-overview-7">
+						<textarea data-template>
+
+							<p>7. Route Guards</p>
+
+							- `canActivate`
+							- `canActivateChild`
+							- `canDeactivate`
+							- `Resolver`
+
+							```typescript
+							children: [
+								{
+									path: ':id',
+									component: 'FoodDetailComponent',
+									canActivate: 'CheckAllergiesService',
+									canDeactivate: 'EnsureEnoughConsumedService',
+								},
+							],
+							```
+
+							<aside class="notes" data-markdown>
+							- Play similar role to Roles/Caps & hooks/filters
+							- services you inject; access to data, do arbitrary things
+							- type of guard depends on when it comes into play
+							— Resolver: not a guard type; not going to get into it
+							</aside>
+
+						</textarea>
+					</section>
+
+						<section data-markdown id="angular-router-overview-2">
+							<textarea data-template>
+
+								<p>8. Inter-app navigation</p>
+
+								- `routerLink` bindings trigger navigation
+
+								```typescript
+								<a routerLink="/rutabaga">Eat yer veggies</a>
+								```
+
+								- programmatic ways to trigger navigation
+								- `@angular/animations` sister core library
+
+								<aside class="notes" data-markdown>
+								- Animations manage UI transitions
+								</aside>
+					</textarea>
+				</section>
+
+				<section data-markdown id="outline-checkin-1">
+					<textarea data-template>
+						## Check in
+
+						1. _What is Routing
+						2. **Angular routing overview** <— we are done here!
+						3. _Technique for getting routes from your CMS_ <— next!
+
+						<aside class="notes" data-markdown>
+						- No questions
+						- what we're moving into will help
+						</aside>
+					</textarea>
+				</section>
+
+				<!-- SCENARIO -->
+				<section data-markdown id="">
+					<textarea data-template>
+						## Scenario
+
+						- Givens:
+							- content-heavy app
+							- Angular frontend
+
+						- Problems with no content backend:
+							- content updates/additions require engineers
+							- NomNomApp will be **huge** if compiled with content
+
+						- Solution: Separate backend system for content. Yay!
+
+						<aside class="notes" data-markdown>
+						- notes
+						</aside>
+					</textarea>
+				</section>
+
+				<!-- STRENGTHS OF APPROACH -->
+				<section data-markdown id="">
+					<textarea data-template>
+						## Strengths of this approach
+
+						- Separation of concerns
+						- Strength of WP's routing: Map to queries
+							- performant content lookup
+						- Strength of WP's editor interface
+						- strength of Ng's routing: Map to code
+							- Power and flexibility
+						- strength of single-page: inter-app navigation without HTTP
+
+						<aside class="notes" data-markdown>
+						- content management/display
+						- optimized DB access
+						- WP is very good, developed, solid editorial UX — solid choice 9/10 times for what it does
+						</aside>
+					</textarea>
+				</section>
+
+				<!-- BUT WE HAVE A PROBLEM -->
+				<section data-markdown id="">
+					<textarea data-template>
+						## But we have a problem
+
+						<aside class="notes" data-markdown>
+						- as you know by now
+						- Router configuration is bundled with your app
+						</aside>
+					</textarea>
+				</section>
+
+				<!-- TEASE APPROACH -->
+				<section data-markdown id="">
+					<textarea data-template>
+						# What you're here for
+
+					</textarea>
+				</section>
+
+				<!-- OUTLINE APPROACH -->
+				<section data-markdown id="">
+					<textarea data-template>
+						## The Approach
+
+						1. Compile with a starter router config
+						2. Use a CanActivate Route Guard that gets routes from the CMS on first load
+						3. Trigger application reload with the routes
+
+					</textarea>
+				</section>
+
+				<!-- CODE TIME -->
+				<section data-markdown id="code-time">
+					<textarea data-template>
+						# CODE TIME!
+					</textarea>
+				</section>
+
+				<!-- !!!!!!! -->
+				<!-- LAST SLIDE: THANK YOU! -->
+				<section data-markdown id="">
+					<textarea data-template>
+						# Thank you!
+
+						**Matthew Eppelsheimer**
+
+						- Let's Do Tweets! @mattepp on Twitter
+						- Let's Do Emails! matthew.eppelsheimer@10up.com
+						- Let's be Coworkers! <a href="https://is10uphiring.com">is10uphiring.com</a>
+					</textarea>
+				</section>
+			</div>
+		</div>
+
+		<script src="./node_modules/reveal.js/lib/js/head.min.js"></script>
+		<script src="./node_modules/reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: './node_modules/reveal.js/plugin/markdown/marked.js' },
+					{ src: './node_modules/reveal.js/plugin/markdown/markdown.js' },
+					{ src: './node_modules/reveal.js/plugin/notes/notes.js', async: true },
+					{ src: './node_modules/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: './node_modules/reveal.js/plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>

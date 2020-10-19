@@ -1,0 +1,23 @@
+{
+  "description": "2018-08 Presentation for Portland Angular Meetup",
+  "homepage": "https://github.com/MatthewEppelsheimer/presentation-angular-cms-routing",
+  "main": "js/reveal.js",
+  "scripts": {
+    "build": "(npm install && cd node_modules/reveal.js/ && npm install && npm run build)"
+  },
+  "author": {
+    "name": "Matthew Eppelsheimer",
+    "email": "matthew.eppelsheimer@gmail.com",
+    "web": "https://mattheweppelsheimer.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MatthewEppelsheimer/presentation-angular-cms-routing"
+  },
+  "engines": {
+    "node": ">=4.00"
+  },
+  "dependencies": {
+    "reveal.js": "3.7.0"
+  }
+}
