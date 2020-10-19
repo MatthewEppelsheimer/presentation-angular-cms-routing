@@ -1,5 +1,7 @@
 # Reconfiguring Angular's Router with a CMS
 
+This presentation is live at [mattheweppelsheimer.com/presentation-reconfigure-angular-router-with-cms](http://mattheweppelsheimer.com/presentation-reconfigure-angular-router-with-cms)
+
 ## About
 
 This is a presentation I gave at the Angular Portland Meetup at Alchemy Code Lab on 2018-08-16 on a technique for using an Angular frontend with a WordPress backend, relying on WordPress' built-in routing instead of re-implementing it in Angular. 
