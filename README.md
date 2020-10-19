@@ -17,3 +17,7 @@ Subject matter includes:
 
 This uses [Reveal.js](). After downloading, do `npm run build` to fetch Reveal.js' dependencies and build it, then **public/index.html** should load correctly in your browser.
 
+## Notes
+
+Non-visible notes are included inline in some slides. Reveal.js will display these in a separate window in presenter mode — see Reveal's docs for setting this up.
+
