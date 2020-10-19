@@ -622,6 +622,120 @@
 					</textarea>
 				</section>
 
+				<!-- CODE EXAMPLES -->
+				<section data-markdown id="code-example">
+```typescript
+import {
+	EventEmitter,
+	Injectable,
+} from '@angular/core';
+import {
+	CanActivate,
+	Routes,
+	Router,
+	RouterStateSnapshot,
+	UrlSegment,
+} from '@angular/router';
+
+/*
+ * This service interacts with the WordPress' API to get content (routes)
+ */
+import { BackendService } from './backend.service';
+
+@Injectable()
+export class PageRouteService implements CanActivate {
+	private _routes: Routes;
+
+	constructor(
+		private _backend: BackendService,
+		private _router: Router,
+	) {
+		this._routes = [];
+	}
+
+	/*
+	 * THE GOODS
+	 */
+
+	/*
+	 * Load and use dynamic routes for pages as a `canActivate` route guard
+	 *
+	 * Reset Router config with Routes built for pages provided by backend data.
+	 * If NOT routing to home, interrupt routing and reload the original request
+	 * with the updated routes. Otherwise, when routing to home, we still need to
+	 * reset with updated Routes to prime for `routerLink`-based navigation, but
+	 * we have the route we need; we don't need to reload before proceeding with
+	 * routing (so we return 'true').
+	 */
+	canActivate(state: RouterStateSnapshot): Promise<boolean> {
+		let isHome: boolean;
+		isHome = '/' === state.url;
+
+		let canActivatePromise: Promise<boolean>;
+		canActivatePromise = new Promise((resolve) => {
+			// If home, resolve immediately
+			if (isHome) {
+				resolve(true);
+			}
+
+			// Helper that knows how to get data from BackendService
+			this._fetchPageRouteDataFromBackend()
+				.then((routeData: Array<{page_path: string}>) => {
+					// Get current router config
+					let routes: Routes;
+					routes = this._router.config;
+
+					// Add routes to beginning of routes config array
+					//
+					// This helper function knows structure of both page data from BackendService,
+					// and the format the Angular router config needs.
+					for (let route of this._constructPageRoutesFromPageArray(routeData)) {
+						routes.unshift(route);
+					}
+
+					// Reset router with modified routes
+					this._router.resetConfig(routes);
+
+					// Indicate we are now ready
+					this._updateStatus('ready');
+
+					if (! isHome) {
+						// interrupt navigation and reload with updated routes
+						resolve(false);
+
+						// Retry original request with updated routes, without adding a redirect step to browser history
+						this._router.navigateByUrl(state.url, { replaceUrl: true });
+					}
+				});
+		});
+
+		return canActivatePromise;
+	}
+
+	/*
+	 * Construct routes from an array of page data
+	 */
+	private _constructPageRoutesFromPageArray(pages: {page_path: string}[]): Routes {
+		let routes: Routes;
+		routes = [];
+
+		for (let page of pages) {
+			let route = {
+				path: page.page_path,
+				component: PageComponent,
+				data: {
+					page_path: page.page_path
+				}
+			};
+			routes.push(route);
+		}
+
+		return routes;
+	}
+}
+```
+				</section>
+
 				<!-- !!!!!!! -->
 				<!-- LAST SLIDE: THANK YOU! -->
 				<section data-markdown id="">
