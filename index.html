@@ -6,11 +6,11 @@
 
 		<title>Reconfiguring Angular's Router with a CMS</title>
 
-		<link rel="stylesheet" href="./node_modules/reveal.js/css/reveal.css">
-		<link rel="stylesheet" href="./node_modules/reveal.js/css/theme/black.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme-black.css">
 
 		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="./node_modules/reveal.js/lib/css/zenburn.css">
+		<link rel="stylesheet" href="css/zenburn.css">
 
 		<!-- Printing and PDF exports -->
 		<script>
@@ -752,8 +752,8 @@ export class PageRouteService implements CanActivate {
 			</div>
 		</div>
 
-		<script src="./node_modules/reveal.js/lib/js/head.min.js"></script>
-		<script src="./node_modules/reveal.js/js/reveal.js"></script>
+		<script src="js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
 
 		<script>
 			// More info about config & dependencies:
@@ -761,11 +761,11 @@ export class PageRouteService implements CanActivate {
 			// - https://github.com/hakimel/reveal.js#dependencies
 			Reveal.initialize({
 				dependencies: [
-					{ src: './node_modules/reveal.js/plugin/markdown/marked.js' },
-					{ src: './node_modules/reveal.js/plugin/markdown/markdown.js' },
-					{ src: './node_modules/reveal.js/plugin/notes/notes.js', async: true },
-					{ src: './node_modules/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-					{ src: './node_modules/reveal.js/plugin/notes/notes.js', async: true }
+					{ src: 'js/marked.js' },
+					{ src: 'js/markdown.js' },
+					{ src: 'js/notes.js', async: true },
+					{ src: 'js/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'js/notes.js', async: true }
 				]
 			});
 		</script>

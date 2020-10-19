@@ -15,5 +15,5 @@ Subject matter includes:
 
 ## Install and Run
 
-This uses [Reveal.js](). After downloading, do `npm run build` to fetch Reveal.js' dependencies and build it, then **index.html** should load correctly in your browser.
+This uses [Reveal.js](). After downloading, do `npm run build` to fetch Reveal.js' dependencies and build it, then **public/index.html** should load correctly in your browser.
 

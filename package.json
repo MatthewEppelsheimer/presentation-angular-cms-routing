@@ -3,7 +3,7 @@
   "homepage": "https://github.com/MatthewEppelsheimer/presentation-angular-cms-routing",
   "main": "js/reveal.js",
   "scripts": {
-    "build": "(npm install && cd node_modules/reveal.js/ && npm install && npm run build)"
+    "build": "sh ./build.sh"
   },
   "author": {
     "name": "Matthew Eppelsheimer",
